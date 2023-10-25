@@ -1,4 +1,3 @@
-<!-- Show these admin pages only when the admin is logged in -->
 <?php  require '../assets/partials/_admin-check.php';   ?>
 
 
