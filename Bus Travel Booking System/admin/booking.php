@@ -1,4 +1,3 @@
-<!-- Show these admin pages only when the admin is logged in -->
 <?php  require '../assets/partials/_admin-check.php';   ?>
 
 
@@ -28,23 +27,10 @@
     <?php require '../assets/partials/_admin-header.php';?>
 <!-- Add, Edit and Delete Bookings -->
 <?php
-        /*
-            1. Check if an admin is logged in
-            2. Check if the request method is POST
-        */
         if($loggedIn && $_SERVER["REQUEST_METHOD"] == "POST")
         {
             if(isset($_POST["submit"]))
             {
-                /*
-                    ADDING Bookings
-                 Check if the $_POST key 'submit' exists
-                */
-                // Should be validated client-side
-                // echo "<pre>";
-                // var_export($_POST);
-                // echo "</pre>";
-                // die;
                 $customer_id = $_POST["cid"];
                 $customer_name = $_POST["cname"];
                 $customer_phone = $_POST["cphone"];
@@ -61,13 +47,12 @@
         
                 if(!$booking_exists)
                 {
-                    // Route is unique, proceed
                     $sql = "INSERT INTO `bookings` (`customer_id`, `route_id`, `customer_route`, `booked_amount`, `booked_seat`, `booking_created`) VALUES ('$customer_id', '$route_id','$route', '$amount', '$booked_seat', current_timestamp());";
 
                     $result = mysqli_query($conn, $sql);
-                    // Gives back the Auto Increment id
+                  
                     $autoInc_id = mysqli_insert_id($conn);
-                    // If the id exists then, 
+                   
                     if($autoInc_id)
                     {
                         $key = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -75,7 +60,7 @@
                         for($i = 0; $i < 5; ++$i)
                             $code .= $key[rand(0,strlen($key) - 1)];
                         
-                        // Generates the unique bookingid
+                       
                         $booking_id = $code.$autoInc_id;
                         
                         $query = "UPDATE `bookings` SET `booking_id` = '$booking_id' WHERE `bookings`.`id` = $autoInc_id;";
@@ -91,13 +76,13 @@
     
                 if($booking_added)
                 {
-                    // Show success alert
+                    
                     echo '<div class="my-0 alert alert-success alert-dismissible fade show" role="alert">
                     <strong>Successful!</strong> Booking Added
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>';
 
-                    // Update the Seats table
+                  
                     $bus_no = get_from_table($conn, "routes", "route_id", $route_id, "bus_no");
                     $seats = get_from_table($conn, "seats", "bus_no", $bus_no, "seat_booked");
                     if($seats)
@@ -111,7 +96,6 @@
                     mysqli_query($conn, $updateSeatSql);
                 }
                 else{
-                    // Show error alert
                     echo '<div class="my-0 alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>Error!</strong> Booking already exists
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -120,10 +104,6 @@
             }
             if(isset($_POST["edit"]))
             {
-                // EDIT BOOKING
-                // echo "<pre>";
-                // var_export($_POST);
-                // echo "</pre>";die;
                 $cname = $_POST["cname"];
                 $cphone = $_POST["cphone"];
                 $id = $_POST["id"];
@@ -150,24 +130,21 @@
     
                     elseif($updateResult)
                     {
-                        // Show success alert
                         $messageStatus = "success";
                         $messageHeading = "Successfull!";
                         $messageInfo = "Customer details Edited";
                     }
                     else{
-                        // Show error alert
                         $messageInfo = "Your request could not be processed due to technical Issues from our part. We regret the inconvenience caused";
                     }
     
-                    // MESSAGE
+                  
                     echo '<div class="my-0 alert alert-'.$messageStatus.' alert-dismissible fade show" role="alert">
                     <strong>'.$messageHeading.'</strong> '.$messageInfo.'
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>';
                 }
                 else{
-                    // If customer details already exists
                     echo '<div class="my-0 alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>Error!</strong> Customer already exists
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -177,7 +154,6 @@
             }
             if(isset($_POST["delete"]))
             {
-                // DELETE BOOKING
                 $id = $_POST["id"];
                 $route_id = $_POST["route_id"];
                 // Delete the booking with id => id
@@ -200,11 +176,9 @@
                     $messageInfo = "Booking Details deleted";
                     $messageHeading = "Successfull!";
 
-                    // Update the Seats table
                     $bus_no = get_from_table($conn, "routes", "route_id", $route_id, "bus_no");
                     $seats = get_from_table($conn, "seats", "bus_no", $bus_no, "seat_booked");
 
-                    // Extract the seat no. that needs to be deleted
                     $booked_seat = $_POST["booked_seat"];
 
                     $seats = explode(",", $seats);
@@ -220,7 +194,7 @@
                     $messageInfo = "Your request could not be processed due to technical Issues from our part. We regret the inconvenience caused";
                 }
 
-                // Message
+             
                 echo '<div class="my-0 alert alert-'.$messageStatus.' alert-dismissible fade show" role="alert">
                 <strong>'.$messageHeading.'</strong> '.$messageInfo.'
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -234,7 +208,6 @@
             $resultSqlResult = mysqli_query($conn, $resultSql);
 
             if(!mysqli_num_rows($resultSqlResult)){ ?>
-                <!-- Bookings are not present -->
                 <div class="container mt-4">
                     <div id="noCustomers" class="alert alert-dark " role="alert">
                         <h1 class="alert-heading">No Bookings Found!!</h1>
@@ -271,9 +244,6 @@
                         <?php
                             while($row = mysqli_fetch_assoc($resultSqlResult))
                             {
-                                    // echo "<pre>";
-                                    // var_export($row);
-                                    // echo "</pre>";
                                 $id = $row["id"];
                                 $customer_id = $row["customer_id"];
                                 $route_id = $row["route_id"];
@@ -368,19 +338,8 @@
             <?php } ?> 
         </div>
     </main>
-    <!-- Requiring _getJSON.php-->
-    <!-- Will have access to variables 
-        1. routeJson
-        2. customerJson
-        3. seatJson
-        4. busJson
-        5. adminJson
-        6. bookingJSON
-    -->
     <?php require '../assets/partials/_getJSON.php';?>
     
-    <!-- All Modals Here -->
-    <!-- Add Booking Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
                     <div class="modal-content">
@@ -390,16 +349,12 @@
                     </div>
                     <div class="modal-body">
                         <form id="addBookingForm" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
-                            <!-- Passing Route JSON -->
                             <input type="hidden" id="routeJson" name="routeJson" value='<?php echo $routeJson; ?>'>
-                            <!-- Passing Customer JSON -->
                             <input type="hidden" id="customerJson" name="customerJson" value='<?php echo $customerJson; ?>'>
-                            <!-- Passing Seat JSON -->
                             <input type="hidden" id="seatJson" name="seatJson" value='<?php echo $seatJson; ?>'>
 
                             <div class="mb-3">
                                 <label for="cid" class="form-label">Customer ID</label>
-                                <!-- Search Functionality -->
                                 <div class="searchQuery">
                                     <input type="text" class="form-control searchInput" id="cid" name="cid">
                                     <div class="sugg">
@@ -424,14 +379,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Send the route_id -->
                             <input type="hidden" name="route_id" id="route_id">
-                            <!-- Send the departure timing too -->
                             <input type="hidden" name="dep_timing" id="dep_timing">
 
                             <div class="mb-3">
                                 <label for="sourceSearch" class="form-label">Source</label>
-                                <!-- Search Functionality -->
                                 <div class="searchQuery">
                                     <input type="text" class="form-control searchInput" id="sourceSearch" name="sourceSearch">
                                     <div class="sugg">
@@ -553,7 +505,6 @@
                 <p>
                     Do you really want to delete this booking? <strong>This process cannot be undone.</strong>
                 </p>
-                <!-- Needed to pass id -->
                 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" id="delete-form"  method="POST">
                     <input id="delete-id" type="hidden" name="id">
                     <input id="delete-booked-seat" type="hidden" name="booked_seat">
@@ -568,7 +519,6 @@
         </div>
     </div>
     <script src="../assets/scripts/admin_booking.js"></script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
 </html>
