@@ -1,4 +1,3 @@
-<!-- Show these admin pages only when the admin is logged in -->
 <?php   require '../assets/partials/_admin-check.php';     ?>
    
 <!DOCTYPE html>
@@ -26,26 +25,12 @@
     <!-- Requiring the admin header files -->
     <?php require '../assets/partials/_admin-header.php';
         require '../assets/partials/_getJSON.php';
-    //  Will have access to variables 
-    //     1. routeJson
-    //     2. customerJson
-    //     3. seatJson
-    //     4. busJson
-    //     5. adminJson
-    //     6. bookingJSON
     $routeData = json_decode($routeJson);
     $customerData = json_decode($customerJson);
     $seatData = json_decode($seatJson);
     $busData = json_decode($busJson);
     $adminData = json_decode($adminJson);
     $bookingData = json_decode($bookingJson);
-    // $earningData = json_decode($earningJson);
-
-    // echo "<pre>";
-    // var_export(get_object_vars($adminData[0])["user_fullname"]);
-    // var_export($adminData);
-    // var_export($_SESSION);
-    // echo "</pre>";
 
     ?>
 
@@ -183,7 +168,6 @@
                 <h4>Other Admin</h4>
                 <div id="admin">
                     <?php 
-                        // Loop through Admin Data and show the admins in boxes other than the existing admin which is $user_id  == $_SESSION["user_id"]
                         foreach($adminData as $admin)
                         {
                             $adminArr = get_object_vars($admin);
