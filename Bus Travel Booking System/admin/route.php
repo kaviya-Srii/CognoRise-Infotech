@@ -1,4 +1,3 @@
-<!-- Show these admin pages only when the admin is logged in -->
 <?php  require '../assets/partials/_admin-check.php';   ?>
 
 
@@ -24,24 +23,14 @@
     ?>
 </head>
 <body>
-    <!-- Requiring the admin header files -->
+
     <?php require '../assets/partials/_admin-header.php';?>
 
-    <!-- Add, Edit and Delete Routes -->
     <?php
-        /*
-            1. Check if an admin is logged in
-            2. Check if the request method is POST
-        */
         if($loggedIn && $_SERVER["REQUEST_METHOD"] == "POST")
         {
             if(isset($_POST["submit"]))
             {
-                /*
-                    ADDING ROUTES
-                 Check if the $_POST key 'submit' exists
-                */
-                // Should be validated client-side
                 $viaCities = strtoupper($_POST["viaCities"]);
                 $cost = $_POST["stepCost"];
                 $deptime = $_POST["dep_time"];
@@ -77,7 +66,6 @@
                     if($result)
                     {
                         $route_added = true;
-                        // The bus is now assigned, updating uses table
                         bus_assign($conn, $busno);
                     }
                 }
@@ -410,7 +398,6 @@
         </div>
     <!-- External JS -->
     <script src="../assets/scripts/admin_routes.js"></script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
 </html>
